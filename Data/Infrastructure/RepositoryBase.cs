@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Data.Infrastructure
 {
-    public abstract class RepositoryBase<T> : IRepository<T> where T : BaseEntity
+    public class RepositoryBase<T> : IRepository<T> where T : BaseEntity
     {
         protected ApplicationDbContext dbContext;
         private readonly DbSet<T> dbSet;
@@ -48,11 +48,24 @@ namespace Data.Infrastructure
             return set.FirstOrDefault(x => x.id == id);
         }
 
-        public T Get(Expression<Func<T, bool>> where, params string[] navigations)
+        //public IList<T> FindByExpressionOrdered(Expression<Func<T, bool>> filter, params Expression<Func<T, object>>[] orderBy)
+        //{
+        //    var query = SessionScope.Current.Set<T>().Where(filter).OrderBy(orderBy.First());
+
+        //    if (orderBy.Length > 1) { for (int i = 1; i < orderBy.Length; i++) { query = query.ThenBy(orderBy[i]); } }
+        //    return query.ToList();
+        //}
+
+        public T Get(Expression<Func<T, bool>> where,
+            Expression<Func<T, object>> orderBy = null,
+            bool isOrderByAsc = false,
+            params string[] navigations)
         {
             var set = dbSet.AsQueryable();
             foreach (string nav in navigations) { set = set.Include(nav); }
-            return set.FirstOrDefault(where);
+            set = set.Where(where);
+            if (orderBy != null) { set = isOrderByAsc ? set.OrderBy(orderBy) : set.OrderByDescending(orderBy); }
+            return set.FirstOrDefault();
         }
 
         public IEnumerable<T> GetAll(params string[] navigations)
@@ -62,11 +75,16 @@ namespace Data.Infrastructure
             return set.AsEnumerable();
         }
 
-        public IEnumerable<T> GetMany(Expression<Func<T, bool>> where, params string[] navigations)
+        public IEnumerable<T> GetMany(Expression<Func<T, bool>> where,
+            Expression<Func<T, object>> orderBy = null,
+            bool isOrderByAsc = false,
+            params string[] navigations)
         {
             var set = dbSet.AsQueryable();
             foreach (string nav in navigations) { set = set.Include(nav); }
-            return set.Where(where).AsEnumerable();
+            set = set.Where(where);
+            if (orderBy != null) { set = isOrderByAsc ? set.OrderBy(orderBy) : set.OrderByDescending(orderBy); }
+            return set.AsEnumerable();
         }
     }
 }

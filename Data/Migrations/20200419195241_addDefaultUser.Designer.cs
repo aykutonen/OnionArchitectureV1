@@ -3,14 +3,16 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200419195241_addDefaultUser")]
+    partial class addDefaultUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,9 +30,6 @@ namespace Data.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("Order")
                         .HasColumnType("INTEGER");
@@ -72,9 +71,6 @@ namespace Data.Migrations
                     b.Property<string>("FirstName")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("LastName")
                         .HasColumnType("TEXT");
 
@@ -96,14 +92,13 @@ namespace Data.Migrations
                         new
                         {
                             id = 1L,
-                            CreatedAt = new DateTime(2020, 4, 19, 21, 41, 29, 61, DateTimeKind.Utc).AddTicks(2682),
+                            CreatedAt = new DateTime(2020, 4, 19, 19, 52, 40, 637, DateTimeKind.Utc).AddTicks(4982),
                             Email = "aykutonen@gmail.com",
                             FirstName = "Aykut",
-                            IsDeleted = false,
                             LastName = "Önen",
                             Password = "123",
                             Status = 1,
-                            UpdatedAt = new DateTime(2020, 4, 19, 21, 41, 29, 61, DateTimeKind.Utc).AddTicks(5164)
+                            UpdatedAt = new DateTime(2020, 4, 19, 19, 52, 40, 637, DateTimeKind.Utc).AddTicks(7795)
                         });
                 });
 

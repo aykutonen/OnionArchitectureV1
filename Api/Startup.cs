@@ -27,11 +27,19 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"), y => y.MigrationsAssembly("Data")));
-            //services.AddDbContext<ApplicationDbContext>(x => x.UseSqlite(Configuration["ConnectionStrings:DefaultConnection"]));
-
-            //services.AddTransient(typeof(Data.Infrastructure.IRepository<>), typeof(Data.Infrastructure.RepositoryBase<>));
             services.AddControllers().AddNewtonsoftJson();
+
+            // DB Migration iþlemlerinde migration dosyalarýnýn Data katmanýnda saklanabilmesi için sqlite options'a þu tanýmlamayý yapýyoruz.  y => y.MigrationsAssembly("Data")
+            services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"), y => y.MigrationsAssembly("Data")));
+            services.AddScoped(typeof(Data.Infrastructure.IUnitOfWork), typeof(Data.Infrastructure.UnitOfWork));
+
+            // Repository'leri tek tek burada tanýmlamak istemediðimizde bu þekilde tanýmlayabiliriz.
+            // Bu kullanýmýn sorunu, repository için modeller (T) çaðýrýldýðý yerden tanýmlanacaðý için tek noktadan deðiþiklik yapýlmasý proje içerisinde kod deðiikliðne ihtiyaç duymasýdýr.
+            // Bu sorunu yaþamamak için her bir repository eþleþmesini ayrý ayrý olarak services'e eklemek daha doðru olacaktýr.
+            services.AddScoped(typeof(Data.Infrastructure.IRepository<>), typeof(Data.Infrastructure.RepositoryBase<>));
+
+            services.AddTransient(typeof(Service.IToDoService), typeof(Service.ToDoService));
+            services.AddTransient(typeof(Service.IUserService), typeof(Service.UserService));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
