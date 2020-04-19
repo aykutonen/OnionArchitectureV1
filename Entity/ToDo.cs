@@ -12,6 +12,5 @@ namespace Entity
         // Relations
         public long UserId { get; set; }
         public virtual User User { get; set; }
-        public virtual IEnumerable<ToDo> ToDos { get; set; }
     }
 }

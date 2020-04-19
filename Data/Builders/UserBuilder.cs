@@ -15,6 +15,12 @@ namespace Data.Builders
             builder.Property(p => p.id).ValueGeneratedOnAdd();
             builder.Property(p => p.Email).IsRequired();
             builder.Property(p => p.Password).IsRequired();
+
+            builder.HasMany(x => x.ToDos)
+                .WithOne(x => x.User)
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired();
         }
     }
 }

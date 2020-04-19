@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Data.Migrations
 {
-    public partial class createTable : Migration
+    public partial class CreateDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -16,6 +16,7 @@ namespace Data.Migrations
                     Status = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(nullable: false),
@@ -35,20 +36,14 @@ namespace Data.Migrations
                     Status = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
                     Description = table.Column<string>(nullable: false),
                     Order = table.Column<int>(nullable: false),
-                    UserId = table.Column<long>(nullable: false),
-                    ToDoid = table.Column<long>(nullable: true)
+                    UserId = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ToDo", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_ToDo_ToDo_ToDoid",
-                        column: x => x.ToDoid,
-                        principalTable: "ToDo",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_ToDo_User_UserId",
                         column: x => x.UserId,
@@ -57,10 +52,10 @@ namespace Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_ToDo_ToDoid",
-                table: "ToDo",
-                column: "ToDoid");
+            migrationBuilder.InsertData(
+                table: "User",
+                columns: new[] { "id", "CreatedAt", "Email", "FirstName", "IsDeleted", "LastName", "Password", "Status", "UpdatedAt" },
+                values: new object[] { 1L, new DateTime(2020, 4, 19, 22, 40, 47, 441, DateTimeKind.Utc).AddTicks(7909), "aykutonen@gmail.com", "Aykut", false, "Önen", "123", 1, new DateTime(2020, 4, 19, 22, 40, 47, 441, DateTimeKind.Utc).AddTicks(9890) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ToDo_UserId",

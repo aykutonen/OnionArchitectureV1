@@ -38,9 +38,6 @@ namespace Data.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("ToDoid")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
@@ -48,8 +45,6 @@ namespace Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.HasKey("id");
-
-                    b.HasIndex("ToDoid");
 
                     b.HasIndex("UserId");
 
@@ -96,23 +91,19 @@ namespace Data.Migrations
                         new
                         {
                             id = 1L,
-                            CreatedAt = new DateTime(2020, 4, 19, 21, 41, 29, 61, DateTimeKind.Utc).AddTicks(2682),
+                            CreatedAt = new DateTime(2020, 4, 19, 22, 40, 47, 441, DateTimeKind.Utc).AddTicks(7909),
                             Email = "aykutonen@gmail.com",
                             FirstName = "Aykut",
                             IsDeleted = false,
                             LastName = "Önen",
                             Password = "123",
                             Status = 1,
-                            UpdatedAt = new DateTime(2020, 4, 19, 21, 41, 29, 61, DateTimeKind.Utc).AddTicks(5164)
+                            UpdatedAt = new DateTime(2020, 4, 19, 22, 40, 47, 441, DateTimeKind.Utc).AddTicks(9890)
                         });
                 });
 
             modelBuilder.Entity("Entity.ToDo", b =>
                 {
-                    b.HasOne("Entity.ToDo", null)
-                        .WithMany("ToDos")
-                        .HasForeignKey("ToDoid");
-
                     b.HasOne("Entity.User", "User")
                         .WithMany("ToDos")
                         .HasForeignKey("UserId")
