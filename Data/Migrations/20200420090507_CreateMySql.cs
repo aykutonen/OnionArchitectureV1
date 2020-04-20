@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Data.Migrations
 {
-    public partial class CreateDatabase : Migration
+    public partial class CreateMySql : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,7 +13,7 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Status = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
@@ -32,7 +33,7 @@ namespace Data.Migrations
                 columns: table => new
                 {
                     id = table.Column<long>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Status = table.Column<int>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
                     UpdatedAt = table.Column<DateTime>(nullable: false),
@@ -55,7 +56,7 @@ namespace Data.Migrations
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "id", "CreatedAt", "Email", "FirstName", "IsDeleted", "LastName", "Password", "Status", "UpdatedAt" },
-                values: new object[] { 1L, new DateTime(2020, 4, 19, 22, 40, 47, 441, DateTimeKind.Utc).AddTicks(7909), "aykutonen@gmail.com", "Aykut", false, "Önen", "123", 1, new DateTime(2020, 4, 19, 22, 40, 47, 441, DateTimeKind.Utc).AddTicks(9890) });
+                values: new object[] { 1L, new DateTime(2020, 4, 20, 9, 5, 7, 399, DateTimeKind.Utc).AddTicks(5226), "aykutonen@gmail.com", "Aykut", false, "Önen", "123", 1, new DateTime(2020, 4, 20, 9, 5, 7, 399, DateTimeKind.Utc).AddTicks(8275) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_ToDo_UserId",
