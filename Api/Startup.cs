@@ -30,7 +30,7 @@ namespace Api
             services.AddControllers().AddNewtonsoftJson();
 
             // DB Migration iþlemlerinde migration dosyalarýnýn Data katmanýnda saklanabilmesi için sqlite options'a þu tanýmlamayý yapýyoruz.  y => y.MigrationsAssembly("Data")
-            services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"), y => y.MigrationsAssembly("Data")));
+            services.AddDbContext<ApplicationDbContext>(opt => opt.UseMySql(Configuration.GetConnectionString("MySql"), y => y.MigrationsAssembly("Data")));
             services.AddScoped(typeof(Data.Infrastructure.IUnitOfWork), typeof(Data.Infrastructure.UnitOfWork));
 
             // Repository'leri tek tek burada tanýmlamak istemediðimizde bu þekilde tanýmlayabiliriz.
