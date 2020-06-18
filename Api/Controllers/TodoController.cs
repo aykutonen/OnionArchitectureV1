@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Entity;
-using Microsoft.AspNetCore.Http;
+﻿using Entity;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using System.Collections.Generic;
 
 namespace Api.Controllers
 {
@@ -27,7 +23,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ToDo Post([FromBody]ToDo model)
+        public ToDo Post([FromBody] ToDo model)
         {
             service.Create(model);
             service.Save();
