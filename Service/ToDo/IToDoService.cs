@@ -7,9 +7,9 @@ namespace Service
 {
     public interface IToDoService : ISave
     {
-        void Create(ToDo entity);
-        void Update(ToDo entity);
-        IEnumerable<ToDo> Get(long userId);
-        void Delete(long id);
+        ReturnModel<ToDo> Create(ToDo entity);
+        ReturnModel<ToDo> Update(ToDo entity);
+        ReturnModel<IEnumerable<ToDo>> Get(long userId);
+        ReturnModel<long> Delete(long id);
     }
 }

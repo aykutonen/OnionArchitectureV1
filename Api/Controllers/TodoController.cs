@@ -19,7 +19,7 @@ namespace Api.Controllers
         [HttpGet]
         public IEnumerable<ToDo> Get(long userId)
         {
-            return service.Get(userId);
+            return service.Get(userId).Data;
         }
 
         [HttpPost]

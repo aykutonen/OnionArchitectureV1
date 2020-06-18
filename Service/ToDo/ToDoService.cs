@@ -18,47 +18,98 @@ namespace Service
             this.unitOfWork = unitOfWork;
         }
 
-        public void Create(ToDo entity)
+        public ReturnModel<ToDo> Create(ToDo entity)
         {
-            //entity.Status = 1;
-            //entity.CreatedAt = DateTime.UtcNow;
-            //entity.UpdatedAt = entity.CreatedAt;
-            // Sıra belirtilmemişse en sona ekle.
-            if (entity.Order == 0)
+            var result = new ReturnModel<ToDo>();
+
+            try
             {
-                var lastRecord = repository.Get(x => x.UserId == entity.UserId, o => o.Order);
-                entity.Order = lastRecord != null ? lastRecord.Order + 1 : 1;
-            }
-            // Sıra belirtilmişse belirtilen sıradan sonraki kayıtları tekrar sırala
-            else
-            {
-                var nextRedords = repository.GetMany(x => x.UserId == entity.UserId && x.Order >= entity.Order, o => o.Order, true);
-                if (nextRedords != null && nextRedords.Count() > 0)
+                // Sıra belirtilmemişse en sona ekle.
+                if (entity.Order == 0)
                 {
-                    var lastOrder = entity.Order + 1;
-                    foreach (var t in nextRedords)
+                    var lastRecord = repository.Get(x => x.UserId == entity.UserId, o => o.Order);
+                    entity.Order = lastRecord != null ? lastRecord.Order + 1 : 1;
+                }
+                // Sıra belirtilmişse belirtilen sıradan sonraki kayıtları tekrar sırala
+                else
+                {
+                    var nextRedords = repository.GetMany(x => x.UserId == entity.UserId && x.Order >= entity.Order, o => o.Order, true);
+                    if (nextRedords != null && nextRedords.Count() > 0)
                     {
-                        t.Order = lastOrder;
-                        lastOrder++;
+                        var lastOrder = entity.Order + 1;
+                        foreach (var t in nextRedords)
+                        {
+                            t.Order = lastOrder;
+                            lastOrder++;
+                        }
                     }
                 }
+                repository.Add(entity);
+
+                result.Data = entity;
+
             }
-            repository.Add(entity);
+            catch (Exception ex)
+            {
+                result.isSuccess = false;
+                result.Exception = ex;
+                result.Message = ex.Message;
+            }
+
+            return result;
         }
 
-        public void Delete(long id)
+        public ReturnModel<long> Delete(long id)
         {
-            repository.Delete(x => x.id == id);
+            var result = new ReturnModel<long>();
+            try
+            {
+                repository.Delete(x => x.id == id);
+                result.Data = id;
+            }
+            catch (Exception ex)
+            {
+                result.isSuccess = false;
+                result.Exception = ex;
+                result.Message = ex.Message;
+            }
+            return result;
         }
 
-        public IEnumerable<ToDo> Get(long userId)
+        public ReturnModel<IEnumerable<ToDo>> Get(long userId)
         {
-            return repository.GetMany(x => x.UserId == userId, o => o.Order, true);
+            var result = new ReturnModel<IEnumerable<ToDo>>();
+            try
+            {
+                result.Data = repository.GetMany(x => x.UserId == userId, o => o.Order, true);
+            }
+            catch (Exception ex)
+            {
+                result.isSuccess = false;
+                result.Exception = ex;
+                result.Message = ex.Message;
+            }
+
+            return result;
         }
 
-        public void Update(ToDo entity)
+        public ReturnModel<ToDo> Update(ToDo entity)
         {
-            repository.Update(entity);
+            var result = new ReturnModel<ToDo>();
+
+            try
+            {
+                repository.Update(entity);
+                result.Data = entity;
+            }
+            catch (Exception ex)
+            {
+                result.isSuccess = false;
+                result.Exception = ex;
+                result.Message = ex.Message;
+            }
+
+            return result;
         }
 
         public void Save()
