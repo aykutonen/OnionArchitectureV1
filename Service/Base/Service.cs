@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Service.Base
+namespace Service
 {
     public class Service<T> : IService<T> where T : BaseEntity
     {
@@ -40,6 +40,22 @@ namespace Service.Base
             {
                 repository.Delete(x => x.id == id);
                 result.Data = id;
+            }
+            catch (Exception ex)
+            {
+                result.isSuccess = false;
+                result.Exception = ex;
+                result.Message = ex.Message;
+            }
+            return result;
+        }
+
+        public ReturnModel<IEnumerable<T>> Get()
+        {
+            var result = new ReturnModel<IEnumerable<T>>();
+            try
+            {
+                result.Data = repository.GetAll();
             }
             catch (Exception ex)
             {
@@ -87,5 +103,6 @@ namespace Service.Base
         {
             unitOfWork.Commit();
         }
+
     }
 }
