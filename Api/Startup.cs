@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Entity;
 
 namespace Api
 {
@@ -38,8 +39,10 @@ namespace Api
             // Bu sorunu yaþamamak için her bir repository eþleþmesini ayrý ayrý olarak services'e eklemek daha doðru olacaktýr.
             services.AddScoped(typeof(Data.Infrastructure.IRepository<>), typeof(Data.Infrastructure.RepositoryBase<>));
 
-            services.AddTransient(typeof(Service.IToDoService), typeof(Service.ToDoService));
-            services.AddTransient(typeof(Service.IUserService), typeof(Service.UserService));
+            //services.AddTransient(typeof(Service.IToDoService), typeof(Service.ToDoService));
+            //services.AddTransient(typeof(Service.IUserService), typeof(Service.UserService));
+            // Base service kullanýmý için, tüm service katmaný çaðrýlarýnda IService, Service'e eþitlenir. Model tanýmý Controller tarafýnda yapýlýr.
+            services.AddTransient(typeof(Service.IService<>), typeof(Service.Service<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

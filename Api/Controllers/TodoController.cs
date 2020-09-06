@@ -9,9 +9,9 @@ namespace Api.Controllers
     [ApiController]
     public class TodoController : ControllerBase
     {
-        private readonly IToDoService service;
+        private readonly IService<ToDo> service;
 
-        public TodoController(IToDoService toDoService)
+        public TodoController(IService<ToDo> toDoService)
         {
             this.service = toDoService;
         }

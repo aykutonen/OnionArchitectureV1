@@ -13,9 +13,9 @@ namespace Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserService service;
+        private readonly IService<User> service;
 
-        public UserController(IUserService userService)
+        public UserController(IService<User> userService)
         {
             this.service = userService;
         }
@@ -23,7 +23,7 @@ namespace Api.Controllers
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            return service.Get();
+            return service.Get().Data;
         }
     }
 }
