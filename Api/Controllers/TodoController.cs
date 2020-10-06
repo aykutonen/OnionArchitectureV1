@@ -17,9 +17,10 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ToDo> Get(long userId)
+        public IActionResult Get(long userId)
         {
-            return service.Get(userId).Data;
+            if (userId > 0) return Ok(service.Get(userId).Data);
+            return Ok(".Net Core, Entity Framework Core, Code First, Onion Architecture, Repository Pattern, Unit Of Work Pattern'lerinin birlikte kullanıldığı To Do app için api projesi.");
         }
 
         [HttpPost]
