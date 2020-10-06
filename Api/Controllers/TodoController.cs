@@ -37,6 +37,18 @@ namespace Api.Controllers
             return Ok(model);
         }
 
+        [HttpPut]
+        public IActionResult Update([FromBody] ToDoRequestModel.Update model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = service.Update(model);
+                if (result.isSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+            return Ok(model);
+        }
+
         [HttpDelete]
         public IActionResult Delete(long id)
         {

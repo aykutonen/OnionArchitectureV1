@@ -105,22 +105,87 @@ namespace Service
             return result;
         }
 
-        public ReturnModel<ToDoResponseModel.Update> Update(ToDoRequestModel.Update entity)
+        public ReturnModel<ToDoResponseModel.Update> Update(ToDoRequestModel.Update model)
         {
             var result = new ReturnModel<ToDoResponseModel.Update>();
 
-            // TODO: update işlemini yap yeni modellere göre.
-            //try
-            //{
-            //    repository.Update(entity);
-            //    result.Data = entity;
-            //}
-            //catch (Exception ex)
-            //{
-            //    result.isSuccess = false;
-            //    result.Exception = ex;
-            //    result.Message = ex.Message;
-            //}
+            try
+            {
+                var entity = repository.Get(model.id);
+
+                #region Check ToDo Order Change
+                // Todo'nun sırası değişmişse
+                if (model.Order.HasValue && entity.Order != model.Order)
+                {
+                    // Todo yukarı taşınmışsa; Yeni sıradan sonraki tüm sıraları 1 arttır.
+                    if (model.Order.Value < entity.Order)
+                    {
+                        var nextRedords = repository
+                            .GetMany(x =>
+                            x.UserId == entity.UserId
+                            && x.Order >= model.Order.Value
+                            && x.Order < entity.Order
+                            && x.id != model.id,
+                            o => o.Order, true);
+
+                        if (nextRedords != null && nextRedords.Count() > 0)
+                        {
+                            var lastOrder = model.Order.Value + 1;
+                            foreach (var t in nextRedords)
+                            {
+                                t.Order = lastOrder;
+                                lastOrder++;
+                            }
+                        }
+                    }
+                    // Todo aşağı taşınmışsa
+                    else
+                    {
+                        var beforeRecords = repository
+                            .GetMany(x =>
+                            x.UserId == entity.UserId
+                            && x.Order <= model.Order.Value
+                            && x.Order > entity.Order
+                            && x.id != model.id,
+                            o => o.Order, true);
+
+                        if (beforeRecords != null && beforeRecords.Count() > 0)
+                        {
+                            // Eski sıram 1 değilse eksiltme yap.
+                            var lastOrder = model.Order.Value - 1;
+                            foreach (var t in beforeRecords)
+                            {
+                                t.Order = lastOrder;
+                                lastOrder--;
+                            }
+                        }
+
+                    }
+                }
+                #endregion
+
+                entity.Description = model.Description;
+                entity.Order = model.Order ?? entity.Order;
+                entity.Status = model.Status ?? entity.Status;
+                entity.UpdatedAt = DateTime.UtcNow;
+
+                repository.Update(entity);
+                Save();
+
+                result.Data = new ToDoResponseModel.Update()
+                {
+                    Description = entity.Description,
+                    id = entity.id,
+                    Order = entity.Order,
+                    Status = entity.Status
+                };
+            }
+            catch (Exception ex)
+            {
+                result.isSuccess = false;
+                result.Exception = ex;
+                result.Message = ex.Message;
+            }
 
             return result;
         }

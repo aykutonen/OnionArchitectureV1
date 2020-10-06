@@ -15,11 +15,12 @@ namespace Service
 
         public class Update
         {
-            [Required,
-                StringLength(500, MinimumLength = 1, ErrorMessage = "Açıklama uzunluğu en az 1 en fazla 500 karakter uzunluğunda olmalıdır.")]
+            public long id { get; set; }
+            [Required(ErrorMessage = "Description alanı gerekli"),
+            StringLength(500, ErrorMessage = "Açıklama uzunluğu en fazla 500 karakter uzunluğunda olmalıdır.")]
             public string Description { get; set; }
-            public int Order { get; set; } = 1;
-            public int Status { get; set; }
+            public int? Order { get; set; }
+            public int? Status { get; set; }
         }
     }
 }
