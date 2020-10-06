@@ -3,7 +3,6 @@ using Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Service
 {
@@ -18,25 +17,24 @@ namespace Service
             this.unitOfWork = unitOfWork;
         }
 
-        public ReturnModel<ToDo> Create(ToDo entity)
+        public ReturnModel<ToDoResponseModel.Create> Create(ToDoRequestModel.Create model)
         {
-            var result = new ReturnModel<ToDo>();
-
+            var result = new ReturnModel<ToDoResponseModel.Create>();
             try
             {
                 // Sıra belirtilmemişse en sona ekle.
-                if (entity.Order == 0)
+                if (model.Order == 0)
                 {
-                    var lastRecord = repository.Get(x => x.UserId == entity.UserId, o => o.Order);
-                    entity.Order = lastRecord != null ? lastRecord.Order + 1 : 1;
+                    var lastRecord = repository.Get(x => x.UserId == model.UserId, o => o.Order);
+                    model.Order = lastRecord != null ? lastRecord.Order + 1 : 1;
                 }
                 // Sıra belirtilmişse belirtilen sıradan sonraki kayıtları tekrar sırala
                 else
                 {
-                    var nextRedords = repository.GetMany(x => x.UserId == entity.UserId && x.Order >= entity.Order, o => o.Order, true);
+                    var nextRedords = repository.GetMany(x => x.UserId == model.UserId && x.Order >= model.Order, o => o.Order, true);
                     if (nextRedords != null && nextRedords.Count() > 0)
                     {
-                        var lastOrder = entity.Order + 1;
+                        var lastOrder = model.Order + 1;
                         foreach (var t in nextRedords)
                         {
                             t.Order = lastOrder;
@@ -44,10 +42,23 @@ namespace Service
                         }
                     }
                 }
-                repository.Add(entity);
 
-                result.Data = entity;
+                var toDo = new ToDo()
+                {
+                    Description = model.Description,
+                    Order = model.Order,
+                    UserId = model.UserId
+                };
 
+                repository.Add(toDo);
+                Save();
+
+                result.Data = new ToDoResponseModel.Create()
+                {
+                    id = toDo.id,
+                    Description = toDo.Description,
+                    Order = toDo.Order
+                };
             }
             catch (Exception ex)
             {
@@ -93,21 +104,22 @@ namespace Service
             return result;
         }
 
-        public ReturnModel<ToDo> Update(ToDo entity)
+        public ReturnModel<ToDoResponseModel.Update> Update(ToDoRequestModel.Update entity)
         {
-            var result = new ReturnModel<ToDo>();
+            var result = new ReturnModel<ToDoResponseModel.Update>();
 
-            try
-            {
-                repository.Update(entity);
-                result.Data = entity;
-            }
-            catch (Exception ex)
-            {
-                result.isSuccess = false;
-                result.Exception = ex;
-                result.Message = ex.Message;
-            }
+            // TODO: update işlemini yap yeni modellere göre.
+            //try
+            //{
+            //    repository.Update(entity);
+            //    result.Data = entity;
+            //}
+            //catch (Exception ex)
+            //{
+            //    result.isSuccess = false;
+            //    result.Exception = ex;
+            //    result.Message = ex.Message;
+            //}
 
             return result;
         }

@@ -24,11 +24,17 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        public ToDo Post([FromBody] ToDo model)
+        public IActionResult Post([FromBody] ToDoRequestModel.Create model)
         {
-            service.Create(model);
-            service.Save();
-            return model;
+            if (ModelState.IsValid)
+            {
+                // TODO: fwt ile user atama işlemini yap
+                var result = service.Create(model);
+                if (result.isSuccess) return Ok(result);
+                return BadRequest(result);
+            }
+
+            return Ok(model);
         }
 
         [HttpDelete]
