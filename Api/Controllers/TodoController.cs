@@ -40,9 +40,9 @@ namespace Api.Controllers
         [HttpDelete]
         public IActionResult Delete(long id)
         {
-            service.Delete(id);
-            service.Save();
-            return Ok();
+            var result = service.Delete(id);
+            if (result.isSuccess) return Ok(result);
+            return BadRequest(result);
         }
 
     }

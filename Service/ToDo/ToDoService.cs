@@ -77,6 +77,7 @@ namespace Service
             {
                 repository.Delete(x => x.id == id);
                 result.Data = id;
+                Save();
             }
             catch (Exception ex)
             {
