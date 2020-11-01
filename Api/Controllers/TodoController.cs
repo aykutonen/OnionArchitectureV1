@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 namespace Api.Controllers
 {
+
+    // TODO: Bu dokümana göre api akışını kontrol et, dönüş modeli, otomatik hata döndürme vs 
+    // https://docs.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-3.0
+    // https://docs.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-3.0#automatic-http-400-responses
+
+
+
     [Route("api/[controller]")]
     [ApiController]
     public class TodoController : ControllerBase
