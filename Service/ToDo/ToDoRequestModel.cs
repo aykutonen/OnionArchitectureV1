@@ -15,6 +15,7 @@ namespace Service
 
         public class Update
         {
+            [Required(ErrorMessage = "id alanı gerekli")]
             public long id { get; set; }
             [Required(ErrorMessage = "Description alanı gerekli"),
             StringLength(500, ErrorMessage = "Açıklama uzunluğu en fazla 500 karakter uzunluğunda olmalıdır.")]
