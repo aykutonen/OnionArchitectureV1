@@ -5,17 +5,17 @@ using System.Collections.Generic;
 
 namespace Api.Controllers
 {
-
-    // TODO: Bu dokümana göre api akışını kontrol et, dönüş modeli, otomatik hata döndürme vs 
-    // https://docs.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-3.0
-    // https://docs.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-3.0#automatic-http-400-responses
-
-
-
     [Route("api/[controller]")]
     [ApiController]
     public class TodoController : ControllerBase
     {
+
+        // Note: ModelState.IsValid kontrolü iptal edildi. .net core'da model validation otomatik çalışıyor.
+        // Hata varsa otomatik olarak badrequest dönüyor, validation mesajlarıyla.
+        // Kaynak; https://docs.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-3.0#automatic-http-400-responses
+
+
+
         private readonly IToDoService service;
 
         public TodoController(IToDoService toDoService)
@@ -33,27 +33,18 @@ namespace Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] ToDoRequestModel.Create model)
         {
-            if (ModelState.IsValid)
-            {
-                // TODO: fwt ile user atama işlemini yap
-                var result = service.Create(model);
-                if (result.isSuccess) return Ok(result);
-                return BadRequest(result);
-            }
-
-            return Ok(model);
+            // TODO: fwt ile user atama işlemini yap
+            var result = service.Create(model);
+            if (result.isSuccess) return Ok(result);
+            return BadRequest(result);
         }
 
         [HttpPut]
         public IActionResult Update([FromBody] ToDoRequestModel.Update model)
         {
-            if (ModelState.IsValid)
-            {
-                var result = service.Update(model);
-                if (result.isSuccess) return Ok(result);
-                return BadRequest(result);
-            }
-            return Ok(model);
+            var result = service.Update(model);
+            if (result.isSuccess) return Ok(result);
+            return BadRequest(result);
         }
 
         [HttpDelete]
